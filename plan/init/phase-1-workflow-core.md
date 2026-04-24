@@ -90,7 +90,7 @@ Responsibilities:
 
 - [ ] Config defaults are tested without a config file.
 - [ ] `.gitignore` and `.chumignore` behavior is covered by fixtures.
-- [ ] Tests, fixtures, scripts, generated files, migrations, and config files are excluded by default.
+- [ ] Tests, fixtures, scripts, generated files, migrations, config files, and `target/**` build output are excluded by default.
 - [ ] `chum init --dry-run` does not write files.
 - [ ] `chum init --write` creates expected workflow files.
 - [ ] `chum check` fails on missing specs.

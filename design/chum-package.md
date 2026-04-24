@@ -141,6 +141,7 @@ source:
     - "vendor/**"
     - "dist/**"
     - "build/**"
+    - "target/**"
     - "coverage/**"
     - "archive/**"
     - "**/{test,tests,__tests__,spec,specs,fixture,fixtures,script,scripts,migration,migrations}/**"

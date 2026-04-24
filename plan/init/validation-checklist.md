@@ -2,59 +2,59 @@
 
 ## Local Rust Validation
 
-- [ ] `cargo fmt --check`
-- [ ] `cargo clippy --all-targets --all-features -- -D warnings`
-- [ ] `cargo test`
-- [ ] `cargo run -- --help`
-- [ ] `cargo run -- init --dry-run`
-- [ ] `cargo run -- check --json`
-- [ ] `cargo run -- archive example --dry-run`
-- [ ] `cargo run -- swim --stubs --dry-run`
+- [x] `cargo fmt --check`
+- [x] `cargo clippy --all-targets --all-features -- -D warnings`
+- [x] `cargo test`
+- [x] `cargo run -- --help`
+- [x] `cargo run -- init --dry-run`
+- [x] `cargo run -- check --json`
+- [x] `cargo run -- archive example --dry-run`
+- [x] `cargo run -- swim --stubs --dry-run`
 
 ## Fixture Validation
 
-- [ ] Plain non-Git directory
-- [ ] Git repo with `.gitignore`
-- [ ] Directory with `.chumignore`
-- [ ] Repo with missing file specs
-- [ ] Repo with missing directory specs
-- [ ] Repo with stale source hash
-- [ ] Repo with TODO backmatter
-- [ ] Repo with unknown backmatter
-- [ ] Repo with verify backmatter
-- [ ] Repo with verify backmatter and `--allow-external-verify`
-- [ ] Repo with tests, fixtures, scripts, generated files, migrations, and config files excluded by default
+- [x] Plain non-Git directory
+- [x] Git repo with `.gitignore`
+- [x] Directory with `.chumignore`
+- [x] Repo with missing file specs
+- [x] Repo with missing directory specs
+- [x] Repo with stale source hash
+- [x] Repo with TODO backmatter
+- [x] Repo with unknown backmatter
+- [x] Repo with verify backmatter
+- [x] Repo with verify backmatter and `--allow-external-verify`
+- [x] Repo with tests, fixtures, scripts, generated files, migrations, and config files excluded by default
 
 ## Archive Validation
 
-- [ ] Frontmatter `change: <id>` discovery
-- [ ] Folder match discovery
-- [ ] Filename match discovery
-- [ ] Explicit `--include` discovery
-- [ ] Ambiguous match failure
-- [ ] Dry run writes nothing
-- [ ] Live specs are never moved
-- [ ] Failed `chum check` warns but does not block
-- [ ] Linked local assets warn and stay in place
-- [ ] Archive manifest contains expected metadata
-- [ ] Markdown links remain valid or warn
+- [x] Frontmatter `change: <id>` discovery
+- [x] Folder match discovery
+- [x] Filename match discovery
+- [x] Explicit `--include` discovery
+- [x] Ambiguous match failure
+- [x] Dry run writes nothing
+- [x] Live specs are never moved
+- [x] Failed `chum check` warns but does not block
+- [x] Linked local assets warn and stay in place
+- [x] Archive manifest contains expected metadata
+- [x] Markdown links remain valid or warn
 
 ## Swim Validation
 
-- [ ] File specs are generated before parent directory specs
-- [ ] Directory specs reference child specs
-- [ ] Existing current specs are skipped
-- [ ] Stale specs are repaired
+- [x] File specs are generated before parent directory specs
+- [x] Directory specs reference child specs
+- [x] Existing current specs are skipped
+- [x] Stale specs are repaired
 - [ ] `--repair` limits writes to incomplete targets
-- [ ] `maxPasses` stops non-converging runs
-- [ ] Failure output names unresolved TODOs, unknowns, and verify items
-- [ ] JSON output includes created, updated, skipped, and unresolved counts
+- [x] `maxPasses` stops non-converging runs
+- [x] Failure output names unresolved TODOs, unknowns, and verify items
+- [x] JSON output includes created, updated, skipped, and unresolved counts
 
 ## Provider Validation
 
-- [ ] Fake provider can converge a fixture repo
-- [ ] Fake provider can produce unresolved gaps
-- [ ] OpenAI provider reports missing auth clearly
+- [x] Fake provider can converge a fixture repo
+- [x] Fake provider can produce unresolved gaps
+- [x] OpenAI provider reports missing auth clearly
 - [ ] `OPENAI_API_KEY` path can be tested with mocked HTTP
 - [ ] Codex login discovery result is logged at debug level, not exposed in normal output
 

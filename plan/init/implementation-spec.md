@@ -149,7 +149,7 @@ Discovery must:
 - walk the filesystem using ignore-aware traversal
 - respect `.gitignore` and `.chumignore`
 - include source code extensions by default
-- exclude Markdown, plaintext, media, binaries, lockfiles, data files, tests, fixtures, scripts, generated files, migrations, and config files by default
+- exclude Markdown, plaintext, media, binaries, lockfiles, data files, tests, fixtures, scripts, generated files, migrations, config files, and common build output directories such as `target/**` by default
 - allow explicit includes to override default exclusions
 
 ### Spec Matching

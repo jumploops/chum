@@ -1,0 +1,17 @@
+{
+  "name": "@magicloops/chum",
+  "version": "0.1.0",
+  "description": "Filesystem-first documentation workflow CLI",
+  "bin": {
+    "chum": "bin/chum.js"
+  },
+  "scripts": {
+    "postinstall": "node scripts/install.js"
+  },
+  "files": [
+    "bin",
+    "scripts",
+    "vendor"
+  ],
+  "license": "MIT"
+}
