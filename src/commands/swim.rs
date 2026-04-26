@@ -5,8 +5,13 @@ use crate::{
     docs::backmatter::{self, Backmatter, SpecKind},
     output,
     provider::{
-        openai::OpenAiProvider, ChumSwimProvider, DirectorySpecInput, FileSpecInput,
-        RepairSpecInput,
+        codex::CodexExecProvider,
+        openai_api::OpenAiApiKeyProvider,
+        openai_auth::{
+            missing_auth_error, resolve_openai_auth, OpenAiAuthResolution, OpenAiAuthStatus,
+            SystemCodexStatusProbe, SystemEnv,
+        },
+        ChumSwimProvider, DirectorySpecInput, FileSpecInput, RepairSpecInput,
     },
     spec,
 };
@@ -41,6 +46,9 @@ pub fn run(mut args: SwimArgs) -> Result<()> {
     }
     if args.allow_external_verify {
         config.swim.allow_external_verify = true;
+    }
+    if args.auth_status {
+        return print_auth_status(&config, &args);
     }
     let dry_run = args.dry_run || !args.write;
     if dry_run {
@@ -161,7 +169,7 @@ fn write_provider_specs(
     if args.provider != "openai" {
         bail!("unsupported provider `{}`", args.provider);
     }
-    let provider = OpenAiProvider::from_environment()?;
+    let provider = build_openai_provider(root, config)?;
     for source in source_files {
         if is_current(&source.spec_path, source)? {
             report.skipped.push(source.spec_path.clone());
@@ -193,9 +201,78 @@ fn write_provider_specs(
         write_or_plan(&dir.spec_path, markdown, args.write, report)?;
     }
     if args.write {
-        repair_until_converged(root, config, source_files, source_dirs, &provider, report)?;
+        repair_until_converged(
+            root,
+            config,
+            source_files,
+            source_dirs,
+            provider.as_ref(),
+            report,
+        )?;
     }
     Ok(())
+}
+
+fn build_openai_provider(root: &Utf8Path, config: &Config) -> Result<Box<dyn ChumSwimProvider>> {
+    match resolve_openai_auth(&config.swim.openai, &SystemEnv, &SystemCodexStatusProbe)? {
+        OpenAiAuthResolution::CodexExec { config, .. } => {
+            Ok(Box::new(CodexExecProvider::new(root.to_path_buf(), config)))
+        }
+        OpenAiAuthResolution::DirectApiKey { config, .. } => {
+            Ok(Box::new(OpenAiApiKeyProvider::new(config)))
+        }
+        OpenAiAuthResolution::Missing { status } => Err(missing_auth_error(&status)),
+    }
+}
+
+fn print_auth_status(config: &Config, args: &SwimArgs) -> Result<()> {
+    if args.provider != "openai" {
+        bail!("auth status is only supported for provider `openai`");
+    }
+    let status = resolve_openai_auth(&config.swim.openai, &SystemEnv, &SystemCodexStatusProbe)?
+        .into_status();
+
+    if args.json {
+        output::print_json(&status)?;
+    } else {
+        print_auth_status_human(&status);
+    }
+    Ok(())
+}
+
+fn print_auth_status_human(status: &OpenAiAuthStatus) {
+    println!("provider: {}", status.provider);
+    println!("requested auth: {}", status.requested_auth_mode);
+    println!("resolved auth: {}", status.resolved_auth_mode);
+    println!(
+        "codex: {}",
+        status.codex_binary.as_deref().unwrap_or("not found")
+    );
+    println!(
+        "codex status: {}",
+        status.codex_status.as_deref().unwrap_or("not checked")
+    );
+    println!(
+        "codex api key: {}",
+        if status.codex_api_key_present {
+            "present"
+        } else {
+            "not present"
+        }
+    );
+    println!(
+        "direct api key: {}",
+        if status.resolved_auth_mode == "apiKey" {
+            status.direct_api_key_env.as_deref().unwrap_or("present")
+        } else if status.direct_api_key_present {
+            "present but not used"
+        } else {
+            "not found"
+        }
+    );
+    if let Some(guidance) = &status.guidance {
+        println!("guidance: {guidance}");
+    }
 }
 
 fn repair_until_converged(

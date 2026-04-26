@@ -2,31 +2,39 @@
 
 ## Purpose
 
-Configuration model and default values for `chum`. It provides the built-in zero-config behavior, optional `chum.config.yaml` loading, and path normalization used before discovery and command execution.
+Defines the loaded configuration model, built-in defaults, YAML override merge
+logic, OpenAI auth config, and root path normalization used by every command.
+Defaults are complete enough for `chum` to run without a config file.
 
 ## Key Exports
 
-- `Config` - Full resolved config for active dirs, archive dir, spec patterns, source filters, markers, and swim settings.
-- `SourceConfig`, `SpecConfig`, `MarkerConfig`, `SwimConfig` - Structured sections serialized with camelCase where needed.
-- `Config::default` - Canonical v1 defaults, including source extension globs and default exclusions.
-- `Config::load` - Reads `chum.config.yaml` when present and merges partial overrides into defaults.
-- `Config::default_yaml` - Emits the default config for `chum init`.
-- `normalize_root` - Resolves a filesystem path into a UTF-8 root path.
+- `Config` is the full runtime configuration.
+- `SourceConfig`, `SpecConfig`, `MarkerConfig`, and `SwimConfig` group command
+  behavior by concern.
+- `OpenAiSwimConfig` stores nested `swim.openai` settings for auth mode, Codex
+  binary, model, and reasoning effort.
+- `OpenAiAuthMode` parses and serializes `auto`, `codex`, and `apiKey`.
+- `Config::load` merges `chum.config.yaml` over defaults.
+- `Config::default_yaml` serializes the built-in defaults for init/docs.
+- `normalize_root` resolves a user path into a UTF-8 path.
 
 ## Dependencies / Contracts
 
-- Defaults must keep `chum check` useful without requiring a config file.
-- `.gitignore` and `.chumignore` are both configured as ignore files by default.
-- `target/**`, generated output, archive history, tests, fixtures, scripts, migrations, and config files are excluded from source discovery by default.
-- Partial config loading replaces whole vector fields when supplied.
+- YAML field names use camelCase to match generated config files.
+- Partial config structs merge nested values without requiring users to repeat
+  the entire default config.
+- OpenAI auth mode accepts `apiKey`, `api-key`, and `api_key` on input but
+  serializes as `apiKey`.
+- Source discovery defaults exclude tests, fixtures, scripts, generated files,
+  migrations, config files, build outputs, and archive history.
 
 <!-- chum:backmatter
 schema: 1
 kind: file
 target: src/config.rs
-source_hash: sha256:982c8708678737ac5c05194d91dd1c956a1ff7c80ee8de52890148b293867d0f
-source_updated_at: 2026-04-24T01:33:20.803723268Z
-spec_updated_at: 2026-04-24T01:35:55.618219Z
+source_hash: sha256:fc8c064b84850c856de69261ddc78126e6e18ef8c373825fb44a7f1d721bc28a
+source_updated_at: 2026-04-24T02:57:18.406391181Z
+spec_updated_at: 2026-04-24T02:57:35.36205Z
 generated_by: chum swim --stubs
 todo: []
 unknowns: []

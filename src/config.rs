@@ -1,7 +1,7 @@
 use anyhow::{Context, Result};
 use camino::Utf8PathBuf;
-use serde::{Deserialize, Serialize};
-use std::{fs, path::Path};
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use std::{fmt, fs, path::Path};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -50,6 +50,69 @@ pub struct SwimConfig {
     pub concurrency: usize,
     pub require_empty_todo_unknown_and_verify: bool,
     pub allow_external_verify: bool,
+    pub openai: OpenAiSwimConfig,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct OpenAiSwimConfig {
+    pub auth: OpenAiAuthMode,
+    pub codex_binary: String,
+    pub model: Option<String>,
+    pub reasoning_effort: Option<String>,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum OpenAiAuthMode {
+    Auto,
+    Codex,
+    ApiKey,
+}
+
+impl OpenAiAuthMode {
+    pub fn parse(value: &str) -> std::result::Result<Self, String> {
+        match value.trim().to_ascii_lowercase().as_str() {
+            "auto" => Ok(Self::Auto),
+            "codex" => Ok(Self::Codex),
+            "apikey" | "api-key" | "api_key" => Ok(Self::ApiKey),
+            other => Err(format!(
+                "invalid OpenAI auth mode `{other}`; expected auto, codex, or apiKey"
+            )),
+        }
+    }
+
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Auto => "auto",
+            Self::Codex => "codex",
+            Self::ApiKey => "apiKey",
+        }
+    }
+}
+
+impl fmt::Display for OpenAiAuthMode {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str(self.as_str())
+    }
+}
+
+impl Serialize for OpenAiAuthMode {
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        serializer.serialize_str(self.as_str())
+    }
+}
+
+impl<'de> Deserialize<'de> for OpenAiAuthMode {
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let value = String::deserialize(deserializer)?;
+        Self::parse(&value).map_err(serde::de::Error::custom)
+    }
 }
 
 #[derive(Debug, Default, Deserialize)]
@@ -99,6 +162,16 @@ struct PartialSwimConfig {
     concurrency: Option<usize>,
     require_empty_todo_unknown_and_verify: Option<bool>,
     allow_external_verify: Option<bool>,
+    openai: Option<PartialOpenAiSwimConfig>,
+}
+
+#[derive(Debug, Default, Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct PartialOpenAiSwimConfig {
+    auth: Option<OpenAiAuthMode>,
+    codex_binary: Option<String>,
+    model: Option<Option<String>>,
+    reasoning_effort: Option<Option<String>>,
 }
 
 impl Default for Config {
@@ -155,6 +228,12 @@ impl Default for Config {
                 concurrency: 4,
                 require_empty_todo_unknown_and_verify: true,
                 allow_external_verify: false,
+                openai: OpenAiSwimConfig {
+                    auth: OpenAiAuthMode::Auto,
+                    codex_binary: "codex".into(),
+                    model: None,
+                    reasoning_effort: None,
+                },
             },
         }
     }
@@ -249,6 +328,20 @@ impl Config {
             if let Some(value) = swim.allow_external_verify {
                 self.swim.allow_external_verify = value;
             }
+            if let Some(openai) = swim.openai {
+                if let Some(value) = openai.auth {
+                    self.swim.openai.auth = value;
+                }
+                if let Some(value) = openai.codex_binary {
+                    self.swim.openai.codex_binary = value;
+                }
+                if let Some(value) = openai.model {
+                    self.swim.openai.model = value;
+                }
+                if let Some(value) = openai.reasoning_effort {
+                    self.swim.openai.reasoning_effort = value;
+                }
+            }
         }
     }
 }
@@ -262,4 +355,39 @@ pub fn normalize_root(path: &Path) -> Result<Utf8PathBuf> {
     };
     Utf8PathBuf::from_path_buf(root)
         .map_err(|path| anyhow::anyhow!("path is not valid UTF-8: {}", path.display()))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use tempfile::tempdir;
+
+    #[test]
+    fn partial_openai_swim_config_merges_with_defaults() {
+        let temp = tempdir().unwrap();
+        fs::write(
+            temp.path().join("chum.config.yaml"),
+            "swim:\n  openai:\n    auth: codex\n",
+        )
+        .unwrap();
+
+        let config = Config::load(temp.path()).unwrap();
+
+        assert_eq!(config.swim.openai.auth, OpenAiAuthMode::Codex);
+        assert_eq!(config.swim.openai.codex_binary, "codex");
+        assert_eq!(config.swim.max_passes, 5);
+    }
+
+    #[test]
+    fn auth_mode_accepts_api_key_spellings() {
+        assert_eq!(
+            OpenAiAuthMode::parse("apiKey").unwrap(),
+            OpenAiAuthMode::ApiKey
+        );
+        assert_eq!(
+            OpenAiAuthMode::parse("api-key").unwrap(),
+            OpenAiAuthMode::ApiKey
+        );
+        assert!(OpenAiAuthMode::parse("browser").is_err());
+    }
 }

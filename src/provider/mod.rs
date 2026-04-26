@@ -1,4 +1,7 @@
+pub mod codex;
 pub mod openai;
+pub mod openai_api;
+pub mod openai_auth;
 
 use anyhow::Result;
 use serde::{Deserialize, Serialize};

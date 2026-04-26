@@ -1,6 +1,6 @@
 use assert_cmd::Command;
 use predicates::prelude::*;
-use std::{fs, path::Path};
+use std::{fs, os::unix::fs::PermissionsExt, path::Path};
 use tempfile::tempdir;
 
 #[test]
@@ -373,6 +373,177 @@ fn archive_fails_closed_on_ambiguous_automatic_matches() {
         .stderr(predicate::str::contains("ambiguous archive matches"));
 }
 
+#[test]
+fn auth_status_reports_missing_auth_without_failure() {
+    let temp = tempdir().unwrap();
+
+    let mut command = Command::cargo_bin("chum").unwrap();
+    scrub_auth_env(&mut command);
+    command
+        .env("CHUM_CODEX_BINARY", temp.path().join("missing-codex"))
+        .args([
+            "swim",
+            "--auth-status",
+            "--json",
+            temp.path().to_str().unwrap(),
+        ])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains(
+            "\"resolvedAuthMode\": \"missing\"",
+        ))
+        .stdout(predicate::str::contains("Run codex login"));
+}
+
+#[test]
+fn auth_status_selects_fake_logged_in_codex() {
+    let temp = tempdir().unwrap();
+    let codex = write_fake_codex(
+        temp.path(),
+        r##"#!/bin/sh
+if [ "$1" = "login" ] && [ "$2" = "status" ]; then
+  echo "Logged in using ChatGPT"
+  exit 0
+fi
+exit 2
+"##,
+    );
+
+    let mut command = Command::cargo_bin("chum").unwrap();
+    scrub_auth_env(&mut command);
+    command
+        .env("CHUM_CODEX_BINARY", &codex)
+        .args([
+            "swim",
+            "--auth-status",
+            "--json",
+            temp.path().to_str().unwrap(),
+        ])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("\"resolvedAuthMode\": \"codex\""))
+        .stdout(predicate::str::contains("Logged in using ChatGPT"));
+}
+
+#[test]
+fn auth_status_falls_back_to_direct_api_key_when_codex_is_missing() {
+    let temp = tempdir().unwrap();
+
+    let mut command = Command::cargo_bin("chum").unwrap();
+    scrub_auth_env(&mut command);
+    command
+        .env("CHUM_CODEX_BINARY", temp.path().join("missing-codex"))
+        .env("OPENAI_API_KEY", "sk-test")
+        .args([
+            "swim",
+            "--auth-status",
+            "--json",
+            temp.path().to_str().unwrap(),
+        ])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("\"resolvedAuthMode\": \"apiKey\""))
+        .stdout(predicate::str::contains(
+            "\"directApiKeyEnv\": \"OPENAI_API_KEY\"",
+        ));
+}
+
+#[test]
+fn forced_codex_auth_status_reports_missing_codex() {
+    let temp = tempdir().unwrap();
+
+    let mut command = Command::cargo_bin("chum").unwrap();
+    scrub_auth_env(&mut command);
+    command
+        .env("CHUM_CODEX_BINARY", temp.path().join("missing-codex"))
+        .env("CHUM_OPENAI_AUTH", "codex")
+        .env("OPENAI_API_KEY", "sk-test")
+        .args([
+            "swim",
+            "--auth-status",
+            "--json",
+            temp.path().to_str().unwrap(),
+        ])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("\"requestedAuthMode\": \"codex\""))
+        .stdout(predicate::str::contains(
+            "\"resolvedAuthMode\": \"missing\"",
+        ));
+}
+
+#[test]
+fn forced_api_key_auth_status_skips_codex_probe() {
+    let temp = tempdir().unwrap();
+    let codex = write_fake_codex(
+        temp.path(),
+        r##"#!/bin/sh
+echo "codex should not have been called" >&2
+exit 99
+"##,
+    );
+
+    let mut command = Command::cargo_bin("chum").unwrap();
+    scrub_auth_env(&mut command);
+    command
+        .env("CHUM_CODEX_BINARY", &codex)
+        .env("CHUM_OPENAI_AUTH", "api-key")
+        .env("OPENAI_API_KEY", "sk-test")
+        .args([
+            "swim",
+            "--auth-status",
+            "--json",
+            temp.path().to_str().unwrap(),
+        ])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("\"resolvedAuthMode\": \"apiKey\""))
+        .stdout(predicate::str::contains("\"codexStatus\": null"));
+}
+
+#[test]
+fn swim_uses_fake_codex_exec_provider() {
+    let temp = tempdir().unwrap();
+    fs::create_dir_all(temp.path().join("src")).unwrap();
+    fs::write(temp.path().join("src/lib.rs"), "pub fn add() {}\n").unwrap();
+    let codex = write_fake_codex(
+        temp.path(),
+        r##"#!/bin/sh
+if [ "$1" = "login" ] && [ "$2" = "status" ]; then
+  echo "Logged in using ChatGPT"
+  exit 0
+fi
+if [ "$1" = "exec" ]; then
+  out=""
+  while [ "$#" -gt 0 ]; do
+    if [ "$1" = "--output-last-message" ]; then
+      shift
+      out="$1"
+    fi
+    shift
+  done
+  cat > /dev/null
+  printf '%s' '{"markdown":"# Generated\\n\\nCurrent behavior is documented.\\n"}' > "$out"
+  exit 0
+fi
+exit 2
+"##,
+    );
+
+    let mut command = Command::cargo_bin("chum").unwrap();
+    scrub_auth_env(&mut command);
+    command
+        .env("CHUM_CODEX_BINARY", &codex)
+        .args(["swim", "--write", temp.path().to_str().unwrap()])
+        .assert()
+        .success()
+        .stdout(predicate::str::contains("chum swim complete"));
+
+    let spec = fs::read_to_string(temp.path().join("src/lib.rs.spec.md")).unwrap();
+    assert!(spec.contains("Current behavior is documented."));
+    assert!(spec.contains("todo: []"));
+}
+
 fn write_complete_specs(root: &Path) {
     Command::cargo_bin("chum")
         .unwrap()
@@ -401,4 +572,30 @@ fn write_complete_specs(root: &Path) {
             );
         fs::write(spec_path, spec).unwrap();
     }
+}
+
+fn scrub_auth_env(command: &mut Command) {
+    for name in [
+        "CHUM_OPENAI_AUTH",
+        "CHUM_CODEX_BINARY",
+        "CHUM_CODEX_MODEL",
+        "CHUM_CODEX_REASONING_EFFORT",
+        "CHUM_CODEX_STRICT_CHATGPT",
+        "CODEX_API_KEY",
+        "CHUM_OPENAI_API_KEY",
+        "CODEX_OPENAI_API_KEY",
+        "OPENAI_API_KEY",
+        "CHUM_OPENAI_MODEL",
+    ] {
+        command.env_remove(name);
+    }
+}
+
+fn write_fake_codex(root: &Path, script: &str) -> std::path::PathBuf {
+    let path = root.join("codex");
+    fs::write(&path, script).unwrap();
+    let mut permissions = fs::metadata(&path).unwrap().permissions();
+    permissions.set_mode(0o755);
+    fs::set_permissions(&path, permissions).unwrap();
+    path
 }

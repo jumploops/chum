@@ -2,30 +2,35 @@
 
 ## Purpose
 
-Public command-line shape for the `chum` binary. This file defines all command names, positional arguments, flags, defaults, and the typed argument structs consumed by command implementations.
+Defines the public command-line shape for the `chum` binary using `clap`
+derive structs. The module is intentionally data-only: it names commands,
+arguments, flags, defaults, and positional paths, while command modules own all
+behavior.
 
 ## Key Exports
 
-- `Cli` - Root `clap::Parser` containing the selected subcommand.
-- `Command` - Subcommand enum for `init`, `check`, `archive`, and `swim`.
-- `InitArgs` - Flags for workflow initialization and optional AGENTS updates.
-- `CheckArgs` - Validation flags including JSON output, archive inclusion, stale allowance, and external verify handling.
-- `ArchiveArgs` - Change id, include globs, optional PR/source metadata, dry-run, JSON, and target path.
-- `SwimArgs` - Target path and generation controls for stub/provider-backed spec creation.
+- `Cli` is the top-level parser and contains one `Command`.
+- `Command` enumerates `init`, `check`, `archive`, and `swim`.
+- `InitArgs`, `CheckArgs`, `ArchiveArgs`, and `SwimArgs` hold typed arguments
+  for their corresponding command modules.
+- `SwimArgs.auth_status` enables secret-free OpenAI/Codex auth diagnostics
+  without generating specs.
 
 ## Dependencies / Contracts
 
-- Command names are user-facing API and should stay aligned with `AGENTS.template.md`, design docs, and plan docs.
-- Default target path for commands that operate on a tree is `.`.
-- `archive` takes `<change-id>` directly; there is no `archive-change` command.
+- The module depends on `clap` derive macros and `PathBuf` only.
+- Defaults here are user-facing CLI defaults; config defaults live in
+  `src/config.rs`.
+- `swim --provider` defaults to `openai`, and `swim --auth-status` is consumed
+  by the swim command before source discovery or provider generation.
 
 <!-- chum:backmatter
 schema: 1
 kind: file
 target: src/cli.rs
-source_hash: sha256:6277a1609eaa53bd515a9c36067f66ffaa95355a8a252669856f58983eb68184
-source_updated_at: 2026-04-24T01:25:17.000182881Z
-spec_updated_at: 2026-04-24T01:35:55.615828Z
+source_hash: sha256:e0c2ed36fcfba6ab6517b254aae54d5a5c1a789d154781ce4609a7ec81c71e69
+source_updated_at: 2026-04-24T02:49:39.669922412Z
+spec_updated_at: 2026-04-24T02:54:29.274952Z
 generated_by: chum swim --stubs
 todo: []
 unknowns: []

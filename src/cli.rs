@@ -84,4 +84,6 @@ pub struct SwimArgs {
     pub stubs: bool,
     #[arg(long)]
     pub allow_external_verify: bool,
+    #[arg(long)]
+    pub auth_status: bool,
 }

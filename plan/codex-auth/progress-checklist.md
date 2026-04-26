@@ -2,57 +2,57 @@
 
 ## Phase 1: Auth Resolver
 
-- [ ] Add `swim.openai` config defaults
-- [ ] Add partial config merge for nested OpenAI settings
-- [ ] Add `OpenAiAuthMode`
-- [ ] Add env override parsing
-- [ ] Add Codex binary lookup abstraction
-- [ ] Add Codex login status probe abstraction
-- [ ] Add direct API-key presence detection
-- [ ] Add `OpenAiAuthResolution`
-- [ ] Add missing-auth diagnostics
-- [ ] Add resolver unit tests
+- [x] Add `swim.openai` config defaults
+- [x] Add partial config merge for nested OpenAI settings
+- [x] Add `OpenAiAuthMode`
+- [x] Add env override parsing
+- [x] Add Codex binary lookup abstraction
+- [x] Add Codex login status probe abstraction
+- [x] Add direct API-key presence detection
+- [x] Add `OpenAiAuthResolution`
+- [x] Add missing-auth diagnostics
+- [x] Add resolver unit tests
 
 ## Phase 2: Direct API Provider Cleanup
 
-- [ ] Rename/split direct API-key provider
-- [ ] Add `CHUM_OPENAI_API_KEY` precedence
-- [ ] Preserve `CODEX_OPENAI_API_KEY` compatibility
-- [ ] Preserve `OPENAI_API_KEY` fallback
-- [ ] Extract shared provider prompts
-- [ ] Remove secret values from direct provider errors
-- [ ] Add direct provider env precedence tests
+- [x] Rename/split direct API-key provider
+- [x] Add `CHUM_OPENAI_API_KEY` precedence
+- [x] Preserve `CODEX_OPENAI_API_KEY` compatibility
+- [x] Preserve `OPENAI_API_KEY` fallback
+- [x] Extract shared provider prompts
+- [x] Remove secret values from direct provider errors
+- [x] Add direct provider env precedence tests
 
 ## Phase 3: Codex Exec Provider
 
-- [ ] Add `src/provider/codex.rs`
-- [ ] Add command runner abstraction
-- [ ] Write structured output schema to temp file
-- [ ] Invoke `codex exec` with stdin prompt
-- [ ] Pass safe Codex exec flags
-- [ ] Parse JSON result file
-- [ ] Add strict ChatGPT env cleanup
-- [ ] Redact command failure output
-- [ ] Add fake command runner tests
+- [x] Add `src/provider/codex.rs`
+- [x] Add command runner abstraction
+- [x] Write structured output schema to temp file
+- [x] Invoke `codex exec` with stdin prompt
+- [x] Pass safe Codex exec flags
+- [x] Parse JSON result file
+- [x] Add strict ChatGPT env cleanup
+- [x] Redact command failure output
+- [x] Add fake command runner tests
 
 ## Phase 4: Swim Integration And Auth Status
 
-- [ ] Route OpenAI provider through auth resolver
-- [ ] Keep `--stubs` offline
-- [ ] Add `chum swim --auth-status`
-- [ ] Add auth status JSON output
-- [ ] Add fake Codex CLI tests
-- [ ] Add direct API fallback integration test
-- [ ] Add forced Codex mode test
-- [ ] Add forced API-key mode test
+- [x] Route OpenAI provider through auth resolver
+- [x] Keep `--stubs` offline
+- [x] Add `chum swim --auth-status`
+- [x] Add auth status JSON output
+- [x] Add fake Codex CLI tests
+- [x] Add direct API fallback integration test
+- [x] Add forced Codex mode test
+- [x] Add forced API-key mode test
 
 ## Phase 5: Docs And Validation
 
-- [ ] Update README auth docs
-- [ ] Update default config docs
-- [ ] Update live specs for touched source files
-- [ ] Run formatter
-- [ ] Run clippy
-- [ ] Run tests
-- [ ] Run `chum check`
-- [ ] Run auth status smoke tests
+- [x] Update README auth docs
+- [x] Update default config docs
+- [x] Update live specs for touched source files
+- [x] Run formatter
+- [x] Run clippy
+- [x] Run tests
+- [x] Run `chum check`
+- [x] Run auth status smoke tests
