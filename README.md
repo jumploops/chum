@@ -1,5 +1,9 @@
 # chum - Context Hierarchy Using Markdown
 
+<p align="center">
+  <img src="./chum_logo.png" alt="chum logo" width="240">
+</p>
+
 `chum` is an installable agent skill for maintaining filesystem-first
 repository documentation.
 
@@ -68,5 +72,4 @@ python3 scripts/chum.py check --root . --json
 
 ## Status
 
-The current implementation follows `plan/skill/`. Obsolete Rust, npm, and
-Codex-auth planning artifacts have been removed.
+The current implementation follows `plan/skill/`.
