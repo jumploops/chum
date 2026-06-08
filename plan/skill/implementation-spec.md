@@ -3,15 +3,12 @@
 ## Context
 
 - Workflow source: [`AGENTS.template.md`](../../AGENTS.template.md)
-- Initial package notes: [`reference/init.md`](../../reference/init.md)
-- Prior Rust CLI plan: [`plan/init/`](../init/)
-- Prior Codex auth plan: [`plan/codex-auth/`](../codex-auth/)
+- Current app-server exploration: [`design/codex-app-server-chum.md`](../../design/codex-app-server-chum.md)
 
-The original `chum` implementation scoped a Rust CLI distributed through Cargo,
-npm/pnpm wrappers, and eventually Homebrew. That shape is useful for a standalone
-tool, but it is not the best primary interface for agent skills. A skill should
-be easy for an agent to run without platform-specific binaries, chmod issues, or
-an install step.
+Earlier `chum` work explored a standalone CLI/package shape. That can be useful
+for a standalone tool, but it is not the best primary interface for agent
+skills. A skill should be easy for an agent to run without platform-specific
+binaries, chmod issues, or an install step.
 
 This plan pivots `chum` into an installable skill with Python scripts under
 `scripts/`, run through `uv run`. The Python script owns deterministic repository
@@ -38,8 +35,7 @@ End-state:
   normalization, validation, init, and archive behavior.
 - The skill instructions tell the agent how to use persistent session context to
   update specs across related files, not one isolated file at a time.
-- Rust, npm, and native-binary packaging remain in the repo only during
-  migration. A final cleanup phase removes them after Python parity.
+- Legacy standalone packaging artifacts are removed after Python parity.
 
 ## Product Decision
 
@@ -273,21 +269,13 @@ analysis. The current Codex session is already the shared-context analyst.
 
 ## Migration Strategy
 
-The Rust code remains temporarily as a behavioral reference and test oracle.
+The migration is complete. The remaining repository shape is skill-first:
 
-During migration:
-
-- do not add new Rust-only product features
-- do not invest further in npm/pnpm/Homebrew/native binary packaging
-- use existing Rust fixtures and command behavior to define Python parity
-- keep existing docs until the skill implementation is stable
-
-After Python parity:
-
-- remove Rust source and Cargo metadata
-- remove npm wrapper files
-- remove Codex exec provider implementation and auth docs that no longer apply
-- update docs/specs to describe the skill-first architecture
+- deterministic behavior lives in `scripts/chum.py`
+- skill instructions live in `SKILL.md`
+- detailed agent references live in `references/`
+- tests and specs cover the Python processor
+- obsolete standalone CLI/package and Codex-auth planning artifacts are removed
 
 ## Phase Breakdown
 
@@ -301,6 +289,9 @@ After Python parity:
 - Phase 4: port init and archive behavior.
 - Phase 5: add tests, fixture parity, and install validation for the skill.
 - Phase 6: remove Rust/npm/native packaging after parity.
+- Phase 7: publishing cleanup for the skill surface.
+- Phase 8: remove obsolete standalone CLI/package and Codex-auth planning
+  artifacts.
 
 ## Cross-Cutting Risks
 
@@ -332,7 +323,7 @@ After Python parity:
 - [x] Add `scripts/chum.py`.
 - [x] Add or update specs for `scripts/`, `references/`, and `agents/`.
 - [x] Update README/status docs to describe the skill-first product.
-- [x] Mark Rust/native packaging plans as superseded when Phase 0 lands.
+- [x] Remove obsolete standalone CLI/package and Codex-auth planning artifacts.
 
 ## Acceptance Criteria
 

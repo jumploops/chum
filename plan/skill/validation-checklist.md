@@ -92,3 +92,4 @@
 - [x] Installed-skill examples pass `--root` explicitly
 - [x] Repo-local `chum.config.yaml` validates `scripts/chum.py`
 - [x] App-server work remains documented as an optional future direction
+- [x] Obsolete standalone CLI/package and Codex-auth plan docs are removed

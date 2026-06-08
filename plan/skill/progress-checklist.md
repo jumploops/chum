@@ -90,3 +90,11 @@
 - [x] Add repo-local config for validating the core Python processor
 - [x] Add live spec coverage for `scripts/chum.py`
 - [x] Keep the app-server proposal as design context, not default workflow
+
+## Phase 8: Obsolete Plan Cleanup
+
+- [x] Remove prior standalone CLI/package plan docs
+- [x] Remove prior Codex-auth plan docs
+- [x] Remove superseded package/auth design docs
+- [x] Remove initial package scoping notes
+- [x] Update remaining docs/specs so they do not link to removed files

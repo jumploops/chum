@@ -1,4 +1,4 @@
-# chum
+# chum - Context Hierarchy Using Markdown
 
 `chum` is an installable agent skill for maintaining filesystem-first
 repository documentation.
@@ -31,7 +31,7 @@ The publishable skill surface is:
 - `scripts/chum.py`
 - `references/`
 
-The remaining files are project docs, tests, specs, and historical design/plan
+The remaining files are project docs, tests, specs, and current design/plan
 context for maintaining this repo.
 
 ## Skill Usage
@@ -68,5 +68,5 @@ python3 scripts/chum.py check --root . --json
 
 ## Status
 
-The skill migration follows `plan/skill/`. Older Rust, npm, and Codex-auth plans
-remain as historical implementation context.
+The current implementation follows `plan/skill/`. Obsolete Rust, npm, and
+Codex-auth planning artifacts have been removed.

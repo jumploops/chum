@@ -2,7 +2,8 @@
 
 ## Context
 
-`chum` has just moved from a Rust/npm CLI into a skill-first shape:
+`chum` has moved from an earlier standalone CLI/package direction into a
+skill-first shape:
 
 - `SKILL.md` gives agents the workflow.
 - `scripts/chum.py` is a standard-library Python processor for deterministic

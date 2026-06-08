@@ -22,10 +22,9 @@ for the filesystem-first documentation workflow.
 - `references/` - Detailed skill references loaded only when needed.
 - `agents/` - Skill UI metadata.
 - `tests/` - Python tests for script behavior.
-- `design/` - Intent/design documentation, including historical package/auth
-  designs and the optional app-server proposal.
+- `design/` - Intent/design documentation, currently including the optional
+  app-server proposal.
 - `plan/` - Phased implementation plan and validation checklists.
-- `reference/` - Initial scoping/reference notes.
 - `.github/` - CI workflow definitions.
 
 ## Dependencies / Contracts
