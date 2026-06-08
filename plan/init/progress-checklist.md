@@ -45,7 +45,7 @@
 - [x] Write source hashes and timestamps
 - [x] Skip current specs
 - [x] Detect stale specs
-- [x] Implement `--repair`
+- [ ] Implement `--repair` mode semantics
 - [x] Implement swim JSON output
 
 ## Phase 4: AI Swim
@@ -53,7 +53,7 @@
 - [x] Define provider trait
 - [x] Add fake provider tests
 - [x] Implement OpenAI provider shell
-- [ ] Spike Codex login discovery
+- [x] Spike Codex login discovery
 - [x] Implement `OPENAI_API_KEY` fallback
 - [x] Generate file specs
 - [x] Generate directory specs from child specs

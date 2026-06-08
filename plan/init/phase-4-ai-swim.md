@@ -61,8 +61,8 @@ Outputs should include:
 
 Auth order:
 
-1. Codex login, if discoverable from the local environment.
-2. `OPENAI_API_KEY`.
+1. Codex exec through a logged-in Codex CLI or `CODEX_API_KEY`.
+2. Direct API-key mode through `CHUM_OPENAI_API_KEY`, `CODEX_OPENAI_API_KEY`, or `OPENAI_API_KEY`.
 3. clear error explaining how to authenticate.
 
 Keep auth discovery isolated so it can change without affecting traversal.
@@ -104,16 +104,16 @@ With `--allow-external-verify`, verify items may remain only when they explicitl
 
 ## Acceptance Criteria
 
-- [ ] Provider trait has unit tests with a fake provider.
-- [ ] OpenAI provider can be selected with `--provider openai`.
-- [ ] Missing auth produces an actionable error.
+- [x] Provider trait has unit tests with a fake provider.
+- [x] OpenAI provider can be selected with `--provider openai`.
+- [x] Missing auth produces an actionable error.
 - [ ] `OPENAI_API_KEY` fallback is covered by an integration-style test with mocked HTTP.
-- [ ] File spec generation validates output before writing.
-- [ ] Directory spec generation uses child specs as primary context.
-- [ ] Repair passes can clear TODO, unknown, and verify items with a fake provider.
-- [ ] `maxPasses` stops non-converging runs.
+- [x] File spec generation validates output before writing.
+- [x] Directory spec generation uses child specs as primary context.
+- [x] Repair passes can clear TODO, unknown, and verify items with a fake provider.
+- [x] `maxPasses` stops non-converging runs.
 - [ ] `--allow-external-verify` allows only external verify items.
-- [ ] Final JSON output includes unresolved gaps when swim fails.
+- [x] Final JSON output includes unresolved gaps when swim fails.
 
 ## Dependencies
 

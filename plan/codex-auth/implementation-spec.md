@@ -1,5 +1,9 @@
 # Implementation Spec: Codex Auth
 
+> Superseded by the skill-first implementation in [`plan/skill/`](../skill/).
+> The final skill does not use `codex exec` for per-file analysis; this plan is
+> retained as historical context for the removed Rust provider.
+
 ## Context
 
 - Related design doc: [`design/codex-auth-provider.md`](../../design/codex-auth-provider.md)
@@ -34,7 +38,7 @@ End-state:
 - Auth resolution and Codex execution are covered by tests using fakes.
 - `chum` never reads or prints Codex auth cache contents.
 
-## Current State
+## Starting State At Plan Creation
 
 Relevant current implementation details:
 
@@ -323,16 +327,16 @@ Test both Git and non-Git directories where relevant. Codex exec must include
 
 ## Acceptance Criteria
 
-- [ ] `chum swim --provider openai` uses Codex auth by default when Codex is
+- [x] `chum swim --provider openai` uses Codex auth by default when Codex is
       available and authenticated.
-- [ ] `CODEX_API_KEY` can drive `codex exec` without direct Responses API use.
-- [ ] `OPENAI_API_KEY` fallback still works when Codex is unavailable.
-- [ ] Forced Codex mode does not fall back to direct API keys.
-- [ ] Forced API-key mode does not invoke Codex.
-- [ ] `chum swim --auth-status` reports secret-free status in human and JSON
+- [x] `CODEX_API_KEY` can drive `codex exec` without direct Responses API use.
+- [x] `OPENAI_API_KEY` fallback still works when Codex is unavailable.
+- [x] Forced Codex mode does not fall back to direct API keys.
+- [x] Forced API-key mode does not invoke Codex.
+- [x] `chum swim --auth-status` reports secret-free status in human and JSON
       forms.
-- [ ] `chum` never reads or parses Codex credential files.
-- [ ] Tests cover auth resolution, fake Codex exec success, fake Codex exec
+- [x] `chum` never reads or parses Codex credential files.
+- [x] Tests cover auth resolution, fake Codex exec success, fake Codex exec
       failure, direct API fallback, missing auth, and redaction.
-- [ ] Existing `cargo fmt`, `cargo clippy`, `cargo test`, and `chum check`
+- [x] Existing `cargo fmt`, `cargo clippy`, `cargo test`, and `chum check`
       validation still pass.

@@ -1,5 +1,8 @@
 # Implementation Spec: init
 
+> Superseded by the skill-first implementation in [`plan/skill/`](../skill/).
+> This plan is retained as historical context for the original Rust CLI.
+
 ## Context
 
 - Related design doc: [`design/chum-package.md`](../../design/chum-package.md)
@@ -206,22 +209,22 @@ warnings:
 - Risk: npm wrapper and Rust binary drift.
   Mitigation: npm package only invokes native binary; version is sourced from release metadata.
 
-- Risk: OpenAI Codex login integration is unclear.
-  Mitigation: isolate auth discovery in the provider module and keep `OPENAI_API_KEY` fallback working.
+- Risk: provider auth behavior regresses as Codex changes.
+  Mitigation: keep auth discovery isolated in the provider module and keep direct API-key fallback working.
 
 ## Docs / Specs To Update
 
-- [ ] Add a root live spec once source files exist.
-- [ ] Add specs for `src/`, `src/commands/`, `src/docs/`, and `src/provider/` during implementation.
-- [ ] Update `AGENTS.template.md` if command names or workflow rules change.
-- [ ] Keep this plan's progress and validation checklists current.
+- [x] Add a root live spec once source files exist.
+- [x] Add specs for `src/`, `src/commands/`, `src/docs/`, and `src/provider/` during implementation.
+- [x] Command names did not require an `AGENTS.template.md` update.
+- [x] Keep this plan's progress and validation checklists current.
 
 ## Acceptance Criteria
 
-- [ ] `cargo run -- init --dry-run` works in a plain directory.
-- [ ] `cargo run -- check --json` reports missing specs deterministically.
-- [ ] `cargo run -- archive example --dry-run` reports an archive move plan.
-- [ ] `cargo run -- swim --stubs --dry-run` reports planned spec writes.
-- [ ] `cargo run -- swim --stubs --write` can create inline specs in a fixture repo.
-- [ ] `cargo test` covers config, ignore, discovery, backmatter, check, archive planning, and swim traversal.
+- [x] `cargo run -- init --dry-run` works in a plain directory.
+- [x] `cargo run -- check --json` reports missing specs deterministically.
+- [x] `cargo run -- archive example --dry-run` reports an archive move plan.
+- [x] `cargo run -- swim --stubs --dry-run` reports planned spec writes.
+- [x] `cargo run -- swim --stubs --write` can create inline specs in a fixture repo.
+- [x] `cargo test` covers config, ignore, discovery, backmatter, check, archive planning, and swim traversal.
 - [ ] npm package can invoke the native binary on macOS and Linux release artifacts.

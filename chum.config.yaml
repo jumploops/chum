@@ -1,0 +1,37 @@
+version: 1
+activeDirs:
+- design
+- plan
+- debug
+- review
+archiveDir: archive
+liveDocGlob: "**/*.spec.md"
+source:
+  respectGitignore: true
+  ignoreFiles:
+  - .gitignore
+  - .chumignore
+  include:
+  - "scripts/chum.py"
+  exclude:
+  - ".git/**"
+  - ".hg/**"
+  - ".svn/**"
+  - "node_modules/**"
+  - "vendor/**"
+  - "dist/**"
+  - "build/**"
+  - "target/**"
+  - "coverage/**"
+  - "archive/**"
+  - "**/{test,tests,__tests__,spec,specs,fixture,fixtures,migration,migrations}/**"
+  - "**/*.{test,spec}.{js,jsx,ts,tsx,py,rb,go,rs,swift,java,kt,kts,cs,php}"
+  - "**/*config.{js,jsx,ts,tsx,cjs,mjs,json,yaml,yml,toml}"
+  - "**/*.min.*"
+  - "**/*.generated.*"
+specs:
+  placement: inline
+  filePattern: "{path}.spec.md"
+  directoryPattern: "{dir}/{basename}.spec.md"
+  rootSpec: repo.spec.md
+  backmatter: required

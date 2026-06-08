@@ -1,5 +1,9 @@
 # Design: Codex Auth Provider
 
+> Superseded by the skill-first implementation in [`plan/skill/`](../plan/skill/).
+> The final skill keeps the active agent session as the shared-context analyst
+> and does not use `codex exec` as a per-file provider.
+
 ## Context
 
 `chum swim` currently has a direct OpenAI Responses API provider that reads an

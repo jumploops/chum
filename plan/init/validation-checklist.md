@@ -56,7 +56,7 @@
 - [x] Fake provider can produce unresolved gaps
 - [x] OpenAI provider reports missing auth clearly
 - [ ] `OPENAI_API_KEY` path can be tested with mocked HTTP
-- [ ] Codex login discovery result is logged at debug level, not exposed in normal output
+- [x] Codex auth status is exposed through `chum swim --auth-status` and normal generation output stays secret-free
 
 ## Packaging Validation
 

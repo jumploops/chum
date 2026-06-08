@@ -95,15 +95,15 @@ Stub mode does not need to converge to success. It proves traversal and write be
 
 ## Acceptance Criteria
 
-- [ ] `chum swim --stubs --dry-run` reports planned writes without writing files.
-- [ ] `chum swim --stubs --write` creates inline file specs.
-- [ ] `chum swim --stubs --write` creates inline directory specs leaf-first.
-- [ ] Generated backmatter validates with the Phase 1 parser.
-- [ ] Existing complete specs with matching hashes are skipped.
-- [ ] Stale specs are detected by hash.
+- [x] `chum swim --stubs --dry-run` reports planned writes without writing files.
+- [x] `chum swim --stubs --write` creates inline file specs.
+- [x] `chum swim --stubs --write` creates inline directory specs leaf-first.
+- [x] Generated backmatter validates with the Phase 1 parser.
+- [x] Existing complete specs with matching hashes are skipped.
+- [x] Stale specs are detected by hash.
 - [ ] Timestamp fallback is tested where hash comparison is unavailable or disabled.
 - [ ] `--repair` limits writes to missing, stale, or incomplete specs.
-- [ ] `--json` reports created, updated, skipped, and unresolved counts.
+- [x] `--json` reports created, updated, skipped, and unresolved counts.
 
 ## Dependencies
 

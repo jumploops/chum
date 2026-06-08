@@ -136,16 +136,16 @@ On command failure:
 
 ## Acceptance Criteria
 
-- [ ] Fake command runner sees stdin prompt, not source argv.
-- [ ] Command args include `--ephemeral`, `--skip-git-repo-check`,
+- [x] Fake command runner sees stdin prompt, not source argv.
+- [x] Command args include `--ephemeral`, `--skip-git-repo-check`,
       `--sandbox read-only`, and `--ask-for-approval never`.
-- [ ] Command args include `--output-schema` and `--output-last-message`.
-- [ ] Configured model is passed as `--model`.
-- [ ] Strict ChatGPT mode removes direct API-key env vars from child env.
-- [ ] Valid JSON result returns `SpecDraft`.
-- [ ] Missing `markdown` fails clearly.
-- [ ] Command failure reports status and redacted stderr.
-- [ ] No test needs a real Codex login.
+- [x] Command args include `--output-schema` and `--output-last-message`.
+- [x] Configured model is passed as `--model`.
+- [x] Strict ChatGPT mode removes direct API-key env vars from child env.
+- [x] Valid JSON result returns `SpecDraft`.
+- [x] Missing `markdown` fails clearly.
+- [x] Command failure reports status and redacted stderr.
+- [x] No test needs a real Codex login.
 
 ## Dependencies
 

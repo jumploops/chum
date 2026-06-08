@@ -73,12 +73,12 @@ bodies or auth headers.
 
 ## Acceptance Criteria
 
-- [ ] Direct provider uses `CHUM_OPENAI_API_KEY` before legacy env vars.
-- [ ] Error text distinguishes direct API-key auth from Codex auth.
-- [ ] No API key value appears in error output.
-- [ ] Shared prompt builder is used by the direct provider.
-- [ ] Existing fake-provider swim tests still pass.
-- [ ] Direct response parsing behavior remains covered.
+- [x] Direct provider uses `CHUM_OPENAI_API_KEY` before legacy env vars.
+- [x] Error text distinguishes direct API-key auth from Codex auth.
+- [x] No API key value appears in error output.
+- [x] Shared prompt builder is used by the direct provider.
+- [x] Existing fake-provider swim tests still pass.
+- [x] Direct response parsing behavior remains covered.
 
 ## Dependencies
 

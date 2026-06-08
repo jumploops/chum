@@ -1,0 +1,6 @@
+interface:
+  display_name: "chum"
+  short_description: "Maintain live repo specs and workflow docs."
+  default_prompt: "Use $chum to inspect stale or missing specs, update them with repo context, normalize backmatter, and run the final check."
+policy:
+  allow_implicit_invocation: true

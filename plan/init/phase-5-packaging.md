@@ -86,14 +86,14 @@ Run smoke tests against built artifacts:
 
 ## Acceptance Criteria
 
-- [ ] Cargo package metadata is complete.
-- [ ] Release workflow builds all four v1 targets.
-- [ ] Checksums are produced for release artifacts.
-- [ ] npm wrapper selects the correct platform binary.
-- [ ] npm wrapper produces clear unsupported-platform errors.
+- [x] Cargo package metadata is complete.
+- [x] Release workflow is configured for all four v1 targets.
+- [x] Release workflow is configured to produce checksums for release artifacts.
+- [x] npm wrapper selects the correct platform binary.
+- [x] npm wrapper produces clear unsupported-platform errors.
 - [ ] `npm install -D @magicloops/chum` can run `chum --help`.
 - [ ] `pnpm add -D @magicloops/chum` can run `pnpm exec chum --help`.
-- [ ] Packaging docs exclude Homebrew from v1.
+- [x] Packaging docs exclude Homebrew from v1.
 
 ## Dependencies
 

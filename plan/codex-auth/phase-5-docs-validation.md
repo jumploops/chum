@@ -76,12 +76,12 @@ fixtures.
 
 ## Acceptance Criteria
 
-- [ ] README explains Codex auth and direct API fallback.
-- [ ] Default config or docs show `swim.openai.auth`.
-- [ ] Live specs are current for every touched source file.
-- [ ] Validation checklist is updated.
-- [ ] No docs suggest reading Codex credential files.
-- [ ] All required local validation commands pass.
+- [x] README explains Codex auth and direct API fallback.
+- [x] Default config or docs show `swim.openai.auth`.
+- [x] Live specs are current for every touched source file.
+- [x] Validation checklist is updated.
+- [x] No docs suggest reading Codex credential files.
+- [x] All required local validation commands pass.
 
 ## Dependencies
 

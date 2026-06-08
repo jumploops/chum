@@ -76,13 +76,13 @@ For Markdown links inside moved files:
 
 ## Acceptance Criteria
 
-- [ ] `chum archive <id> --dry-run` writes nothing and prints a move plan.
-- [ ] `chum archive <id>` moves only selected Markdown docs.
-- [ ] `*.spec.md` files are never moved.
-- [ ] failed `chum check` emits a warning but does not block archive.
-- [ ] archive manifest includes id, timestamp, archived paths, warnings, and optional PR/source metadata.
-- [ ] linked local assets produce warnings and are not moved.
-- [ ] JSON output includes moved files, warnings, and check status.
+- [x] `chum archive <id> --dry-run` writes nothing and prints a move plan.
+- [x] `chum archive <id>` moves only selected Markdown docs.
+- [x] `*.spec.md` files are never moved.
+- [x] failed `chum check` emits a warning but does not block archive.
+- [x] archive manifest includes id, timestamp, archived paths, warnings, and optional PR/source metadata.
+- [x] linked local assets produce warnings and are not moved.
+- [x] JSON output includes moved files, warnings, and check status.
 
 ## Dependencies
 

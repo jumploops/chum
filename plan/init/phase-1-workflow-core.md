@@ -88,16 +88,16 @@ Responsibilities:
 
 ## Acceptance Criteria
 
-- [ ] Config defaults are tested without a config file.
-- [ ] `.gitignore` and `.chumignore` behavior is covered by fixtures.
-- [ ] Tests, fixtures, scripts, generated files, migrations, config files, and `target/**` build output are excluded by default.
-- [ ] `chum init --dry-run` does not write files.
-- [ ] `chum init --write` creates expected workflow files.
-- [ ] `chum check` fails on missing specs.
-- [ ] `chum check` fails on TODO and unknown items.
-- [ ] `chum check` fails on verify items by default.
-- [ ] `chum check --allow-external-verify` allows verify items.
-- [ ] `chum check --json` is valid JSON.
+- [x] Config defaults are tested without a config file.
+- [x] `.gitignore` and `.chumignore` behavior is covered by fixtures.
+- [x] Tests, fixtures, scripts, generated files, migrations, config files, and `target/**` build output are excluded by default.
+- [x] `chum init --dry-run` does not write files.
+- [x] `chum init --write` creates expected workflow files.
+- [x] `chum check` fails on missing specs.
+- [x] `chum check` fails on TODO and unknown items.
+- [x] `chum check` fails on verify items by default.
+- [x] `chum check --allow-external-verify` allows verify items.
+- [x] `chum check --json` is valid JSON.
 
 ## Dependencies
 

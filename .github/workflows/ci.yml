@@ -7,13 +7,12 @@ on:
       - main
 
 jobs:
-  rust:
+  python:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: actions/setup-python@v5
         with:
-          components: clippy, rustfmt
-      - run: cargo fmt --check
-      - run: cargo clippy --all-targets --all-features -- -D warnings
-      - run: cargo test
+          python-version: "3.11"
+      - run: python3 scripts/chum.py --help
+      - run: python3 -m unittest discover tests

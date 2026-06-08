@@ -69,12 +69,12 @@ The wrapper may fail with a clear message until Phase 5 wires real release artif
 
 ## Acceptance Criteria
 
-- [ ] `cargo build` succeeds.
-- [ ] `cargo test` succeeds with at least one command parsing test.
-- [ ] `cargo run -- --help` lists `init`, `check`, `archive`, and `swim`.
-- [ ] `cargo run -- archive --help` shows `<change-id>`.
-- [ ] npm wrapper files exist and document that they delegate to the native binary.
-- [ ] New source folders have matching `*.spec.md` files.
+- [x] `cargo build` succeeds.
+- [x] `cargo test` succeeds with at least one command parsing test.
+- [x] `cargo run -- --help` lists `init`, `check`, `archive`, and `swim`.
+- [x] `cargo run -- archive --help` shows `<change-id>`.
+- [x] npm wrapper files exist and document that they delegate to the native binary.
+- [x] New source folders have matching `*.spec.md` files.
 
 ## Dependencies
 

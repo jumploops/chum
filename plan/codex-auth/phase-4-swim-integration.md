@@ -127,15 +127,15 @@ Fake cases:
 
 ## Acceptance Criteria
 
-- [ ] `--stubs` still runs without auth resolution.
-- [ ] Auto mode selects Codex provider with logged-in fake Codex.
-- [ ] Auto mode selects Codex provider with only `CODEX_API_KEY`.
-- [ ] Auto mode falls back to direct API with no Codex and direct API env.
-- [ ] Forced Codex mode returns missing-auth when Codex is unavailable.
-- [ ] Forced API-key mode does not execute fake Codex.
-- [ ] `--auth-status` human output is secret-free.
-- [ ] `--auth-status --json` is stable JSON.
-- [ ] Codex exec failure does not print full prompt or secrets.
+- [x] `--stubs` still runs without auth resolution.
+- [x] Auto mode selects Codex provider with logged-in fake Codex.
+- [x] Auto mode selects Codex provider with only `CODEX_API_KEY`.
+- [x] Auto mode falls back to direct API with no Codex and direct API env.
+- [x] Forced Codex mode returns missing-auth when Codex is unavailable.
+- [x] Forced API-key mode does not execute fake Codex.
+- [x] `--auth-status` human output is secret-free.
+- [x] `--auth-status --json` is stable JSON.
+- [x] Codex exec failure does not print full prompt or secrets.
 
 ## Dependencies
 

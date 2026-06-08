@@ -102,17 +102,17 @@ Fields to track:
 
 ## Acceptance Criteria
 
-- [ ] `swim.openai` defaults are present in `Config::default()`.
-- [ ] Partial YAML can set only `swim.openai.auth`.
-- [ ] `CHUM_OPENAI_AUTH` overrides YAML auth mode.
-- [ ] `CHUM_CODEX_BINARY` overrides YAML Codex binary.
-- [ ] Auto mode chooses Codex when login status succeeds.
-- [ ] Auto mode chooses Codex when only `CODEX_API_KEY` exists.
-- [ ] Auto mode chooses direct API when Codex is unavailable and direct API key
+- [x] `swim.openai` defaults are present in `Config::default()`.
+- [x] Partial YAML can set only `swim.openai.auth`.
+- [x] `CHUM_OPENAI_AUTH` overrides YAML auth mode.
+- [x] `CHUM_CODEX_BINARY` overrides YAML Codex binary.
+- [x] Auto mode chooses Codex when login status succeeds.
+- [x] Auto mode chooses Codex when only `CODEX_API_KEY` exists.
+- [x] Auto mode chooses direct API when Codex is unavailable and direct API key
       exists.
-- [ ] Forced Codex mode never selects direct API.
-- [ ] Forced API-key mode never probes Codex exec for generation.
-- [ ] Missing auth report includes guidance and no secret values.
+- [x] Forced Codex mode never selects direct API.
+- [x] Forced API-key mode never probes Codex exec for generation.
+- [x] Missing auth report includes guidance and no secret values.
 
 ## Dependencies
 

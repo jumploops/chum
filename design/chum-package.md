@@ -1,5 +1,9 @@
 # Design: chum Package
 
+> Superseded by the skill-first implementation in [`plan/skill/`](../plan/skill/).
+> This design is retained as historical context for the original Rust/npm package
+> direction.
+
 ## Context
 
 `AGENTS.template.md` defines a manual documentation workflow:
