@@ -34,9 +34,9 @@ The publishable skill surface is:
 - `agents/openai.yaml`
 - `scripts/chum.py`
 - `references/`
+- `chum_logo.png`
 
-The remaining files are project docs, tests, specs, and current design/plan
-context for maintaining this repo.
+The remaining files are project docs and tests for maintaining this repo.
 
 ## Skill Usage
 
@@ -72,4 +72,5 @@ python3 scripts/chum.py check --root . --json
 
 ## Status
 
-The current implementation follows `plan/skill/`.
+The current implementation is the Python skill surface in `SKILL.md`,
+`scripts/`, `references/`, and `agents/`.
