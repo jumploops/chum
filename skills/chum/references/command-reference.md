@@ -8,7 +8,7 @@ is installed outside the target repository, pass the target repository with
 uv run /path/to/chum/scripts/chum.py <command> --root /path/to/repo
 ```
 
-When this repository itself is the target, run from the skill root:
+For local smoke checks from the skill root:
 
 ```bash
 uv run scripts/chum.py <command> [options]

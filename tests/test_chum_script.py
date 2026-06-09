@@ -7,7 +7,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SCRIPT = ROOT / "scripts" / "chum.py"
+SCRIPT = ROOT / "skills" / "chum" / "scripts" / "chum.py"
 
 
 def run_chum(*args, input_text=None, cwd=ROOT):

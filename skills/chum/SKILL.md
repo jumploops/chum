@@ -18,7 +18,7 @@ outside the target repository, pass the target repository with `--root`:
 uv run /path/to/chum/scripts/chum.py targets --root /path/to/repo --json
 ```
 
-If this repository itself is the target, run from the skill root:
+For local smoke checks from the skill root:
 
 ```bash
 uv run scripts/chum.py --help

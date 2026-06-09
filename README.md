@@ -11,11 +11,11 @@ It turns the workflow described in `AGENTS.template.md` into a skill plus a
 deterministic Python processor:
 
 ```bash
-uv run scripts/chum.py targets --root . --json
-uv run scripts/chum.py normalize --root . --target src/foo.py --stdin --write
-uv run scripts/chum.py validate --root . --target src/foo.py --json
-uv run scripts/chum.py check --root . --json
-uv run scripts/chum.py archive --root . <change-id> --write --json
+uv run skills/chum/scripts/chum.py targets --root . --json
+uv run skills/chum/scripts/chum.py normalize --root . --target src/foo.py --stdin --write
+uv run skills/chum/scripts/chum.py validate --root . --target src/foo.py --json
+uv run skills/chum/scripts/chum.py check --root . --json
+uv run skills/chum/scripts/chum.py archive --root . <change-id> --write --json
 ```
 
 The script does not call an LLM. The active agent session keeps shared codebase
@@ -25,22 +25,35 @@ normalization, init, and archive mechanics.
 
 ## Install
 
-This repository root is the skill folder. Install it as a Codex skill from the
-repo root path; `SKILL.md` is intentionally at the top level.
+The publishable skill lives in [`skills/chum/`](./skills/chum/).
+
+To install from GitHub in Codex, ask Codex to install:
+
+```text
+https://github.com/jumploops/chum/tree/main/skills/chum
+```
+
+Then restart Codex so the new skill is picked up.
+
+For a local manual install:
+
+```bash
+mkdir -p ~/.codex/skills
+cp -R skills/chum ~/.codex/skills/
+```
 
 The publishable skill surface is:
 
-- `SKILL.md`
-- `agents/openai.yaml`
-- `scripts/chum.py`
-- `references/`
-- `chum_logo.png`
+- `skills/chum/SKILL.md`
+- `skills/chum/agents/openai.yaml`
+- `skills/chum/scripts/chum.py`
+- `skills/chum/references/`
 
 The remaining files are project docs and tests for maintaining this repo.
 
 ## Skill Usage
 
-Start with [SKILL.md](./SKILL.md). The usual loop is:
+Start with [skills/chum/SKILL.md](./skills/chum/SKILL.md). The usual loop is:
 
 1. Run `targets --json`.
 2. Read existing specs and related source files.
@@ -48,8 +61,8 @@ Start with [SKILL.md](./SKILL.md). The usual loop is:
 4. Run `normalize` and `validate` for focused targets.
 5. Finish with `check --json`.
 
-Use `python3 scripts/chum.py ...` as a local development fallback when `uv` is
-not installed.
+Use `python3 skills/chum/scripts/chum.py ...` as a local development fallback
+when `uv` is not installed.
 In restricted sandboxes where `uv` cannot write its default cache, set
 `UV_CACHE_DIR=/tmp/chum-uv-cache`.
 
@@ -64,13 +77,13 @@ uv run /path/to/chum/scripts/chum.py targets --root /path/to/repo --json
 ## Development
 
 ```bash
-python3 scripts/chum.py --help
+python3 skills/chum/scripts/chum.py --help
 python3 -m unittest discover tests
-UV_CACHE_DIR=/tmp/chum-uv-cache uv run scripts/chum.py --help
-python3 scripts/chum.py check --root . --json
+UV_CACHE_DIR=/tmp/chum-uv-cache uv run skills/chum/scripts/chum.py --help
+python3 skills/chum/scripts/chum.py check --root . --json
 ```
 
 ## Status
 
 The current implementation is the Python skill surface in `SKILL.md`,
-`scripts/`, `references/`, and `agents/`.
+`scripts/`, `references/`, and `agents/` under `skills/chum/`.
