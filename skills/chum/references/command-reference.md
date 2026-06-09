@@ -33,7 +33,7 @@ UV_CACHE_DIR=/tmp/chum-uv-cache uv run scripts/chum.py <command> [options]
 - `normalize --root . --target PATH --stdin --write` - Adds or updates backmatter.
 - `validate --root . --target PATH --json` - Validates one source file or directory.
 - `init --root . --write` - Creates workflow scaffolding.
-- `archive --root . CHANGE --write --json` - Moves completed change docs into archive history.
+- `archive --root . CHANGE --write --json` - Moves completed `design/`, `plan/`, `debug/`, and `review/` Markdown docs into archive history.
 
 ## Exit Codes
 

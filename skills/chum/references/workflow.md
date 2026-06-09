@@ -15,6 +15,10 @@ agent decides the route.
 7. Run `validate` after focused batches.
 8. Finish with `check --json`.
 
+Use `review/` docs for notes, findings, file maps, and open questions while
+analyzing an area or functionality. Completed review docs can be archived with
+the related change.
+
 ## Route Planning
 
 Leaf-first traversal is useful, but it is not mandatory. If one central type,

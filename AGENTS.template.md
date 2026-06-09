@@ -45,20 +45,22 @@ This repository uses two complementary documentation types:
 | `design/` docs | Capture problem framing, alternatives, tradeoffs, and the proposed shape of a change | Before non-trivial changes |
 | `plan/` docs | Capture implementation scope, acceptance criteria, rollout, validation, and phased execution details | Before substantial work |
 | `debug/` docs | Capture reproduction, evidence, hypotheses, and proposed fixes | Before bug fixes |
+| `review/` docs | Capture notes, findings, file maps, and analysis while reviewing an area or functionality | Before or during code review and exploratory analysis |
 | `*.spec.md` docs | Capture the current state of code, folders, responsibilities, dependencies, and technical debt | Updated while code changes are made |
 
 ### 2.1) Intent Docs vs Current-State Docs
 
 Use the docs for different jobs:
 
-- `design/`, `plan/`, and `debug/` explain intent.
+- `design/`, `plan/`, `debug/`, and `review/` explain intent and analysis.
 - `*.spec.md` explains what exists now.
 
 The workflow is:
 
 1. Write or update the relevant intent doc before implementation.
 2. Modify code.
-3. Update the affected `*.spec.md` files so the documented current state matches the code that shipped.
+3. Write or update the affected `*.spec.md` files so the documented current state matches the code that shipped.
+4. Use `$chum` to validate that specs exist, are fresh, and have normalized backmatter.
 
 For larger features, the intent flow is usually:
 
@@ -67,15 +69,31 @@ For larger features, the intent flow is usually:
 3. Implement incrementally.
 4. Update the affected `*.spec.md` files alongside the code.
 
-### 2.2) Spec File Structure
+For review or exploratory analysis:
 
-Every folder with source files or other important implementation artifacts should have a `folder-name.spec.md` file that summarizes:
+1. Write `review/<topic>.md` to collect findings, file maps, hypotheses, and open questions.
+2. Use the review doc to guide any follow-up design, plan, debug, or code work.
+3. Archive the review doc with the related change when the work is complete.
+
+### 2.2) Spec Requirements
+
+Every source file should have a corresponding `.spec.md` file.
+
+File specs should explain:
+
+- the file's purpose
+- important exports, entry points, or behaviors
+- dependencies and contracts
+- how the file relates to nearby files
+- known TODOs, unknowns, or verification gaps
+
+Every source directory should also have a `folder-name.spec.md` file that summarizes:
 
 - folder purpose and responsibilities
 - file descriptions and key exports
 - child folder references
 - dependencies and contracts
-- TODOs, unknowns, and technical debt
+- known TODOs, unknowns, and verification gaps
 
 Example:
 
@@ -84,8 +102,12 @@ repo/
 ├── <ROOT_SPEC_FILE>
 ├── <area-a>/
 │   ├── <area-a>.spec.md
+│   ├── service.ts
+│   ├── service.ts.spec.md
 │   └── src/
-│       └── src.spec.md
+│       ├── src.spec.md
+│       ├── index.ts
+│       └── index.ts.spec.md
 └── <area-b>/
     ├── <area-b>.spec.md
     └── ...
@@ -124,29 +146,61 @@ You must update the relevant spec file(s) when you:
 
 | Change Type | Spec Update Required |
 |-------------|---------------------|
-| Add a new file | Add it to the parent folder spec |
-| Delete a file | Remove it from the parent folder spec |
-| Add a new folder | Create a new folder spec and update the parent spec |
-| Change a file's purpose or API | Update its description in the spec |
-| Change important dependencies | Update the dependencies/contracts section |
-| Add or remove technical debt | Update TODO markers or notes |
-| Change architecture or flow | Update the relevant spec narrative and diagrams |
+| Add a new source file | Create the file's `.spec.md` and update the parent directory spec |
+| Delete a source file | Delete the file's `.spec.md` and update the parent directory spec |
+| Add a new source folder | Create a directory spec and update the parent directory spec |
+| Change a file's purpose, behavior, or API | Update that file's `.spec.md` |
+| Change important dependencies | Update the dependencies/contracts section in the affected specs |
+| Add or remove technical debt | Update `todo`, `unknowns`, or `verify` backmatter |
+| Change architecture or flow | Update the relevant file and directory specs |
 
-### 2.5) Spec Markers
+### 2.5) Spec Backmatter
 
-Use markers so unresolved documentation work is searchable:
+Every chum-owned spec should end with a single backmatter block:
 
-| Marker | Usage |
-|--------|-------|
-| `<!-- SPEC:TODO -->` | Known debt, incomplete work, or follow-up needed |
-| `<!-- SPEC:UNKNOWN -->` | Undocumented behavior that needs later review |
-| `<!-- SPEC:VERIFY -->` | Assumption that should be validated |
-
-Find all markers:
-
-```bash
-grep -rn "SPEC:\(UNKNOWN\|TODO\|VERIFY\)" --include="*.spec.md" .
+```markdown
+<!-- chum:backmatter
+schema: 1
+kind: file
+target: src/example.ts
+source_hash: sha256:...
+source_updated_at: 2026-04-24T12:00:00Z
+spec_updated_at: 2026-04-24T12:03:00Z
+generated_by: agent
+todo: []
+unknowns: []
+verify: []
+-->
 ```
+
+Use backmatter lists to record unresolved work:
+
+| Field | Usage |
+|-------|-------|
+| `todo` | Known debt, incomplete documentation, or follow-up needed |
+| `unknowns` | Undocumented behavior that needs later review |
+| `verify` | Assumptions that should be validated |
+
+Completion means `todo`, `unknowns`, and `verify` are empty unless external verification has explicitly been allowed.
+
+Do not introduce legacy `SPEC:TODO`, `SPEC:UNKNOWN`, or `SPEC:VERIFY` markers.
+
+### 2.6) Using chum
+
+Use the `$chum` skill as tooling to support this workflow.
+
+The agent is responsible for reading the code, understanding the repo context, and writing the documentation. chum should be used to validate coverage, detect stale or missing specs, normalize backmatter, and run final checks.
+
+Recommended flow:
+
+1. Write or update `design/`, `plan/`, `debug/`, or `review/` docs when the task calls for intent documentation or analysis notes.
+2. Change the code.
+3. Write or update the affected `.spec.md` files.
+4. Use `$chum` to find missing, stale, invalid, or incomplete specs.
+5. Use `$chum` to normalize spec backmatter.
+6. Finish by running the chum check and resolving any failures.
+
+Do not rely on chum to author the documentation. Use it as the verification and formatting layer for the repo documentation workflow.
 
 ---
 
@@ -161,6 +215,7 @@ grep -rn "SPEC:\(UNKNOWN\|TODO\|VERIFY\)" --include="*.spec.md" .
 | `design/` | Design docs | Pre-implementation reasoning |
 | `plan/` | Implementation plans | Scope, rollout, validation |
 | `debug/` | Debug notes | Repro, evidence, hypotheses |
+| `review/` | Review notes | Findings, file maps, analysis, and open questions |
 
 Key docs:
 
@@ -175,7 +230,7 @@ Key docs:
 
 ### 4.1) Read Specs First
 
-Before modifying a folder, read its spec file first.
+Before modifying a source file, read the file's `.spec.md` and the parent directory spec first.
 
 This should tell you:
 
@@ -191,6 +246,8 @@ Before changing code:
 - create or update a `design/` doc for non-trivial design or architecture work
 - create or update a `plan/` doc for substantial implementation work
 - create or update a `debug/` doc before fixing a bug or incident
+- create or update a `review/` doc when reviewing or analyzing a broad area,
+  flow, or functionality before deciding on implementation work
 
 Each code change should be traceable back to written intent.
 
@@ -208,6 +265,8 @@ Intent docs are not a substitute for specs:
 
 - intent docs say what you plan to do
 - specs say what the repository currently is
+
+Every source file should have a corresponding `.spec.md` file. The file spec and relevant directory specs should change in the same task as the code.
 
 ### 4.4) Read Files In Full
 
@@ -325,7 +384,7 @@ Fill this section with the repository's hard invariants. Typical categories:
 - Risks and mitigations.
 
 ## Spec Files To Update
-- [ ] List each spec file that will need changes
+- [ ] List each source file spec and directory spec that will need changes
 
 ## Impacted Contracts
 - [ ] APIs / RPC
@@ -439,7 +498,72 @@ Suggested roles:
 - Specs/docs affected
 ```
 
+### `review/` Template
+
+```markdown
+# Review: <short-title>
+
+## Scope
+- Area, flow, or functionality reviewed:
+- Related specs/docs:
+
+## Questions
+- What needs to be understood:
+
+## Findings
+- Finding:
+- Evidence:
+- Impact:
+
+## File Map
+- `<path>`: `<role or relevant behavior>`
+
+## Open Questions
+- Question:
+
+## Follow-Up
+- Design/plan/debug docs to create:
+- Specs/docs affected:
+```
+
 ### `*.spec.md` Template
+
+File spec:
+
+```markdown
+# `<file-name>`
+
+Brief description of this file's role.
+
+## Purpose
+
+- What this file owns:
+
+## Behavior
+
+- Important exports, entry points, or user-visible behavior:
+
+## Dependencies / Contracts
+
+- External dependencies:
+- Internal dependencies:
+- Important contracts:
+
+<!-- chum:backmatter
+schema: 1
+kind: file
+target: path/to/file.ts
+source_hash: sha256:...
+source_updated_at: 2026-04-24T12:00:00Z
+spec_updated_at: 2026-04-24T12:03:00Z
+generated_by: agent
+todo: []
+unknowns: []
+verify: []
+-->
+```
+
+Directory spec:
 
 ```markdown
 # <folder-name>
@@ -464,9 +588,18 @@ Brief description of this folder's role.
 - Internal dependencies:
 - Important contracts:
 
-## TODOs / Technical Debt
-
-- [ ] Item
+<!-- chum:backmatter
+schema: 1
+kind: directory
+target: path/to/folder
+spec_updated_at: 2026-04-24T12:03:00Z
+generated_by: agent
+children:
+- path/to/folder/file.ts.spec.md
+todo: []
+unknowns: []
+verify: []
+-->
 ```
 
 ---
@@ -502,12 +635,14 @@ Rules:
 A task is complete when:
 
 - [ ] code, docs, and specs agree
-- [ ] relevant `design/`, `plan/`, or `debug/` docs exist and are current
-- [ ] affected `*.spec.md` files are updated
+- [ ] relevant `design/`, `plan/`, `debug/`, or `review/` docs exist and are current
+- [ ] every affected source file has a corresponding updated `.spec.md` file
+- [ ] affected directory specs are updated
+- [ ] chum validation passes for missing, stale, invalid, and incomplete specs
 - [ ] tests were added or updated where appropriate
 - [ ] contract docs were updated for any boundary changes
 - [ ] schema/storage rollout steps were applied or documented
-- [ ] no new TODOs were introduced without explanation
+- [ ] no new `todo`, `unknowns`, or `verify` backmatter entries were introduced without explanation
 
 ---
 
@@ -519,11 +654,7 @@ Find spec files:
 find . -name "*.spec.md" -type f
 ```
 
-Find spec markers:
-
-```bash
-grep -rn "SPEC:\(UNKNOWN\|TODO\|VERIFY\)" --include="*.spec.md" .
-```
+Use `$chum` to find missing, stale, invalid, or incomplete specs, normalize spec backmatter, and run the final check.
 
 Read the root architecture doc:
 

@@ -187,16 +187,49 @@ class ChumScriptTests(unittest.TestCase):
             self.assertEqual(result.returncode, 0, result.stderr)
             self.assertEqual(json.loads(result.stdout)["written"], [])
 
+    def test_init_appends_agents_snippet_from_markdown_reference(self):
+        with tempfile.TemporaryDirectory() as temp:
+            result = run_chum(
+                "init",
+                "--root",
+                temp,
+                "--write",
+                "--with-agents-template",
+                "--json",
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            agent_doc = Path(temp) / "AGENTS.md"
+            content = agent_doc.read_text()
+            self.assertIn("## Documentation Workflow", content)
+            self.assertIn("Every source file should have a corresponding `.spec.md` file.", content)
+            self.assertIn("Use the `$chum` skill as tooling to support this workflow.", content)
+            self.assertIn("Do not rely on chum to author the documentation.", content)
+
+            result = run_chum(
+                "init",
+                "--root",
+                temp,
+                "--write",
+                "--with-agents-template",
+                "--json",
+            )
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(agent_doc.read_text().count("## Documentation Workflow"), 1)
+
     def test_archive_dry_run_and_write(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
             (root / "design").mkdir()
             (root / "plan" / "example").mkdir(parents=True)
+            (root / "review" / "example").mkdir(parents=True)
             (root / "design" / "example.md").write_text(
-                "---\nchange: example\n---\n# Example\n\nSee [phase](../plan/example/phase-1.md).\n"
+                "---\nchange: example\n---\n# Example\n\nSee [phase](../plan/example/phase-1.md) and [review](../review/example/findings.md).\n"
             )
             (root / "plan" / "example" / "phase-1.md").write_text(
                 "---\nchange: example\n---\n# Phase 1\n"
+            )
+            (root / "review" / "example" / "findings.md").write_text(
+                "---\nchange: example\n---\n# Findings\n"
             )
 
             result = run_chum("archive", "--root", temp, "example", "--json")
@@ -209,6 +242,7 @@ class ChumScriptTests(unittest.TestCase):
             self.assertFalse((root / "design" / "example.md").exists())
             self.assertTrue((root / "archive" / "example" / "design" / "example.md").exists())
             self.assertTrue((root / "archive" / "example" / "plan" / "phase-1.md").exists())
+            self.assertTrue((root / "archive" / "example" / "review" / "findings.md").exists())
             self.assertTrue((root / "archive" / "example" / "README.md").exists())
 
 

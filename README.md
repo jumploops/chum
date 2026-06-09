@@ -27,6 +27,8 @@ normalization, init, and archive mechanics.
 
 The publishable skill lives in [`skills/chum/`](./skills/chum/).
 
+### Codex
+
 To install from GitHub in Codex, ask Codex to install:
 
 ```text
@@ -41,6 +43,27 @@ For a local manual install:
 mkdir -p ~/.codex/skills
 cp -R skills/chum ~/.codex/skills/
 ```
+
+### Claude Code
+
+For a personal Claude Code skill available across projects:
+
+```bash
+mkdir -p ~/.claude/skills
+cp -R skills/chum ~/.claude/skills/
+```
+
+For a project-local Claude Code skill, copy it into that project's
+`.claude/skills/` directory:
+
+```bash
+mkdir -p /path/to/project/.claude/skills
+cp -R skills/chum /path/to/project/.claude/skills/
+```
+
+Claude Code exposes the skill as `/chum` from the installed directory name. If
+Claude Code was already running and the target `skills` directory did not exist
+yet, restart Claude Code so it can discover the new skill directory.
 
 The publishable skill surface is:
 

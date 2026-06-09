@@ -67,3 +67,4 @@ Do not use per-file `codex exec` analysis for this workflow. The active agent se
 - `references/spec-format.md` - Spec placement, content expectations, and backmatter fields.
 - `references/workflow.md` - Detailed adaptive agent workflow.
 - `references/command-reference.md` - Script commands, flags, JSON shapes, and exit codes.
+- `references/agents-snippet.md` - Markdown appended to AGENTS.md by `init --with-agents-template`.

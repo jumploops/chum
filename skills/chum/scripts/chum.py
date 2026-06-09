@@ -75,6 +75,8 @@ MARKERS = {
     "unknowns": "SPEC:UNKNOWN",
     "verify": "SPEC:VERIFY",
 }
+SKILL_ROOT = Path(__file__).resolve().parents[1]
+AGENTS_SNIPPET = SKILL_ROOT / "references" / "agents-snippet.md"
 
 
 class ChumError(Exception):
@@ -1375,15 +1377,27 @@ def write_archive_manifest(
 
 
 def append_agent_snippet(path: Path) -> None:
-    snippet = (
-        "\n\n## chum Documentation Workflow\n\n"
-        "- Live `*.spec.md` files are current truth.\n"
-        "- Active `design/`, `plan/`, `debug/`, and `review/` docs capture intent.\n"
-        "- `archive/**` is historical context only.\n"
-    )
+    snippet = load_agent_snippet()
+    heading = first_level_two_heading(snippet)
     content = path.read_text(encoding="utf-8") if path.exists() else ""
-    if "## chum Documentation Workflow" not in content:
-        path.write_text(content.rstrip() + snippet + "\n", encoding="utf-8")
+    if heading not in content:
+        path.write_text(content.rstrip() + "\n\n" + snippet.rstrip() + "\n", encoding="utf-8")
+
+
+def load_agent_snippet() -> str:
+    try:
+        snippet = AGENTS_SNIPPET.read_text(encoding="utf-8")
+    except OSError as error:
+        raise ChumError(f"failed to read AGENTS snippet: {error}", 3)
+    first_level_two_heading(snippet)
+    return snippet
+
+
+def first_level_two_heading(markdown: str) -> str:
+    for line in markdown.splitlines():
+        if line.startswith("## ") and not line.startswith("### "):
+            return line.strip()
+    raise ChumError("AGENTS snippet must start with a level-2 Markdown heading", 3)
 
 
 def emit_report(report: Dict[str, Any], json_output: bool, output_path: Optional[str]) -> None:
